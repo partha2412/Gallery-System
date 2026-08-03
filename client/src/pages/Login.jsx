@@ -5,8 +5,10 @@ import "../styles/pages/Login.css";
 
 import { loginUser, checkEmail } from "../api/auth.api";
 import { showError, showSuccess } from "../utils/toast";
+import { useAuth } from "../context/AuthContext";
 
 export default function LoginForm({ onSwitch }) {
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
@@ -92,6 +94,8 @@ export default function LoginForm({ onSwitch }) {
         email,
         password,
       });
+
+      login(data.user);
 
       showSuccess(data.message);
 

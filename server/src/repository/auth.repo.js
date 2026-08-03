@@ -16,4 +16,17 @@ export default class UserRepo {
   async updatePassword(id, password) {
     return await userModel.findByIdAndUpdate(id, { password });
   }
+  async clearRefreshToken(userId) {
+    return await userModel.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          refreshToken: null,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+  }
 }

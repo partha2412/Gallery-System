@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
 import {
     User,
     LogOut,
@@ -11,17 +12,17 @@ import {
     X,
     Sparkles,
 } from "lucide-react";
+import { logoutUser } from "../api/auth.api.js";
 
 export default function Header() {
     const navigate = useNavigate();
 
     // Replace with your auth state/context
-    const isLoggedIn = true;
-
-    const user = {
-        name: "Partha",
-        email: "parthasingh35@gmail.com",
-    };
+    const {
+        user,
+        isLoggedIn,
+        logout,
+    } = useAuth();
 
     const [profileOpen, setProfileOpen] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -40,10 +41,16 @@ export default function Header() {
         return () => document.removeEventListener("mousedown", close);
     }, []);
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        try {
+            await logoutUser();   // Wait for server to clear cookies
+        } catch (err) {
+            console.error(err);
+        }
+
+        logout();
         setProfileOpen(false);
         setMobileOpen(false);
-        // Add logout API call here
         navigate("/login");
     };
 
@@ -104,10 +111,10 @@ export default function Header() {
                                 lineHeight: 1.2,
                             }}
                         >
-                            StudyZone
+                            Media Operator
                         </h1>
                         <p className="subtitle" style={{ margin: 0, fontSize: "0.75rem" }}>
-                            AI Workspace
+                            file folders
                         </p>
                     </div>
                 </Link>
@@ -196,7 +203,7 @@ export default function Header() {
                                     fontWeight: 700,
                                 }}
                             >
-                                {user.name[0]}
+                                {user?.name[0]}
                             </div>
 
                             <ChevronDown
@@ -250,7 +257,7 @@ export default function Header() {
                                             fontWeight: 700,
                                         }}
                                     >
-                                        {user.name[0]}
+                                        {user?.name[0]}
                                     </div>
                                     <div style={{ overflow: "hidden" }}>
                                         <h3
@@ -264,7 +271,7 @@ export default function Header() {
                                                 textOverflow: "ellipsis",
                                             }}
                                         >
-                                            {user.name}
+                                            {user?.name}
                                         </h3>
                                         <p
                                             className="caption"
@@ -275,7 +282,7 @@ export default function Header() {
                                                 textOverflow: "ellipsis",
                                             }}
                                         >
-                                            {user.email}
+                                            {user?.email}
                                         </p>
                                     </div>
                                 </div>
@@ -446,7 +453,7 @@ export default function Header() {
                                 fontWeight: 700,
                             }}
                         >
-                            {user.name[0]}
+                            {user?.name[0]}
                         </div>
                         <div>
                             <h3
@@ -457,10 +464,10 @@ export default function Header() {
                                     color: "var(--text)",
                                 }}
                             >
-                                {user.name}
+                                {user?.name}
                             </h3>
                             <p className="caption" style={{ margin: "0.2rem 0 0 0" }}>
-                                {user.email}
+                                {user?.email}
                             </p>
                         </div>
                     </div>

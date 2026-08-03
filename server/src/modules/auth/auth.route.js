@@ -19,6 +19,10 @@ authRoutes.post(
   asyncHandler(authController.loginUserController.bind(authController)),
 );
 authRoutes.post(
+  "/logout",
+  authController.logoutController.bind(authController)
+);
+authRoutes.post(
   "/check-email",
   asyncHandler(authController.checkEmail.bind(authController))
 )

@@ -13,6 +13,7 @@ export const registerUser = async (data) => {
 // ================================
 export const loginUser = async (data) => {
     const response = await api.post("/api/user/login", data);    
+    // console.log(response);
     return response.data;
 };
 
@@ -30,7 +31,9 @@ export const checkEmail = async (email) => {
 // LOGOUT
 // ================================
 export const logoutUser = async () => {
-    const response = await api.post("/auth/logout");
+    const response = await api.post("/api/user/logout");
+    console.log(response);
+    
     return response.data;
 };
 

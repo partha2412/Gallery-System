@@ -8,6 +8,7 @@ import Header from "./components/Header";
 import { PATHS } from "./routes/paths";
 import ThemeProvider from "./context/ThemeContext";
 import { Toaster } from "react-hot-toast";
+import { AuthProvider } from "./context/AuthContext";
 
 function AuthWithKey() {
   const location = useLocation();
@@ -44,10 +45,12 @@ function AppContent() {
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }

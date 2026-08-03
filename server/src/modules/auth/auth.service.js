@@ -51,6 +51,10 @@ export default class AuthService {
     return { accessToken, refreshToken, isExisted };
   }
 
+  async logoutService(userId) {
+    await this.authService.clearRefreshToken(userId);
+  }
+
   async checkEmailService(data){    
     const r =  await this.authService.findByEmail(data);
     return r

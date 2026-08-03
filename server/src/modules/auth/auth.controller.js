@@ -39,6 +39,24 @@ export default class AuthController {
       .status(200)
       .json({ message: "User login successfully", user: user.isExisted });
   }
+  async logoutController(req, res) {
+
+    // await this.authController.logoutService(req.user.id);
+
+    res.clearCookie(
+      "accessToken",
+      app_constant.cookie.accessToken
+    );
+
+    res.clearCookie(
+      "refreshToken",
+      app_constant.cookie.refreshToken
+    );
+
+    return res.json({
+      message: "Logged out successfully",
+    });
+  }
 
   async checkEmail(req, res) {
 
@@ -62,7 +80,7 @@ export default class AuthController {
     }
 
     const user = await this.authController.checkEmailService(email);
-    
+
     if (user) {
       return res.json({
         available: false,
