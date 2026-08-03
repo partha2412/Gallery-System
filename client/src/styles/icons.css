@@ -1,0 +1,10 @@
+.icon {
+    color: var(--secondary);
+
+    transition: .2s;
+}
+
+.icon:hover {
+
+    color: white;
+}
