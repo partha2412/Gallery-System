@@ -7,6 +7,7 @@ export const app_constant = {
   cookie: {
     accessToken: {
       httpOnly: true,
+      sameSite: "none",
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 2 * 24 * 60 * 60 * 1000,
@@ -14,6 +15,7 @@ export const app_constant = {
 
     refreshToken: {
       httpOnly: true,
+      sameSite: "none",
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
