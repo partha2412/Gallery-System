@@ -32,7 +32,7 @@ export const checkEmail = async (email) => {
 // ================================
 export const logoutUser = async () => {
     const response = await api.post("/api/user/logout");
-    console.log(response);
+    // console.log(response);
     
     return response.data;
 };
