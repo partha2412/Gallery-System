@@ -41,7 +41,7 @@ export default class AuthController {
   }
   async logoutController(req, res) {
 
-    // await this.authController.logoutService(req.user.id);
+    await this.authController.logoutService(req.user.id);
 
     res.clearCookie(
       "accessToken",

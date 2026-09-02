@@ -8,21 +8,21 @@ export const app_constant = {
     accessToken: {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: 'none',
+      sameSite: "lax",
       maxAge: 2 * 24 * 60 * 60 * 1000,
     },
 
     refreshToken: {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: 'none',
+      sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     },
 
     clear: {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: 'none',
+      sameSite: "lax",
     },
   },
 };
