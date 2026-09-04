@@ -1,10 +1,15 @@
-import Gallery from "../../models/gallery.model.js";
+import Gallery from "../models/gallery.model.js";
 
 export default class GalleryRepo {
 
     // Create image metadata
     async create(data) {
         return await Gallery.create(data);
+    }
+
+    // Get all images
+    async findAll() {
+        return await Gallery.find({});
     }
 
     // Get all images of a user

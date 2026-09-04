@@ -1,4 +1,4 @@
-import GalleryService from "./gallery.service.js";
+import GalleryService from "../../service/gallery.service.js";
 
 export default class GalleryController {
     constructor() {
@@ -14,6 +14,18 @@ export default class GalleryController {
         return res.status(201).json({
             message: "Image uploaded successfully",
             image,
+        });
+    }
+
+    // Get all images
+    async getAllImagesController(req, res) {
+        const images = await this.galleryService.getAllImagesService(
+            req.user.id
+        );
+
+        return res.status(200).json({
+            message: "All Images fetched successfully",
+            images,
         });
     }
 

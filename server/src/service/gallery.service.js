@@ -1,5 +1,5 @@
-import GalleryRepo from "./gallery.repository.js";
-import CloudinaryStorage from "../../storage/cloudinary.storage.js";
+import GalleryRepo from "../repository/gallery.repository.js";
+import CloudinaryStorage from "../storage/cloudinary.storage.js";
 
 export default class GalleryService {
     constructor() {
@@ -30,6 +30,11 @@ export default class GalleryService {
     }
 
     // Get all images
+    async getAllImagesService() {
+        return await this.galleryRepo.findAll();
+    }
+
+    // Get all images of an user
     async getImagesService(userId) {        
         return await this.galleryRepo.findByUserId(userId);
     }

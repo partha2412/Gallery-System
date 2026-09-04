@@ -1,5 +1,10 @@
 import api from "./axios";
 
+export const getAllGalleryImages = async () => { 
+    const response = await api.get("/api/v1/gallery/all"); 
+    return response.data; 
+};
+
 export const getGalleryImages = async () => {
     const response = await api.get("/api/v1/gallery");
     return response.data;

@@ -40,9 +40,9 @@ const gallerySchema = new Schema(
         size: {
             type: Number,
         },
-        embedding: {
-            type: [Number],
-            default: [],
+        vectorId: {
+            type: String,
+            default: null,
         },
     },
     {

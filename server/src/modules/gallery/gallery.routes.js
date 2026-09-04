@@ -20,6 +20,15 @@ galleryRoutes.post(
 
 // Get all images of logged-in user
 galleryRoutes.get(
+    "/all",
+    verifyAccessToken,
+    asyncHandler(
+        galleryController.getAllImagesController.bind(galleryController)
+    )
+);
+
+// Get all images of logged-in user
+galleryRoutes.get(
     "/",
     verifyAccessToken,
     asyncHandler(

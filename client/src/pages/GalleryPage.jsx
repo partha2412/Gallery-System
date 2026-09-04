@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { showError, showLoading, showSuccess } from '../utils/toast';
 import {
+    getAllGalleryImages,
     getGalleryImages,
     uploadGalleryImage,
     deleteGalleryImage,
@@ -33,23 +34,24 @@ export default function GalleryPage() {
         try {
             setLoading(true);
 
-            const data = await getGalleryImages();
-
-            // console.log("Gallery:", data);
+            const data =
+                viewMode === "mine"
+                    ? await getGalleryImages()
+                    : await getAllGalleryImages();
 
             setImages(data?.images || []);
         } catch (error) {
-            showError(error.message)
-            // console.error("Failed to fetch gallery:", error);
+            showError(error.message);
             setImages([]);
         } finally {
             setLoading(false);
         }
     };
 
+
     useEffect(() => {
         fetchImages();
-    }, []);
+    }, [viewMode]);
 
     // ---------------------------------------
     // UPLOAD IMAGE
