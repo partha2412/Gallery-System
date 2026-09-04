@@ -171,13 +171,13 @@ export default function Header() {
 
                     {/* User Profile Dropdown */}
                     {isLoggedIn ? (
-                        // ================================
-                        // LOGGED IN
-                        // ================================
                         <div
-                            style={{ position: "relative" }}
                             ref={profileRef}
+                            style={{
+                                position: "relative",
+                            }}
                         >
+                            {/* Profile Trigger */}
                             <button
                                 type="button"
                                 onClick={() =>
@@ -187,32 +187,53 @@ export default function Header() {
                                     display: "flex",
                                     alignItems: "center",
                                     gap: "0.6rem",
-                                    padding: "0.35rem 0.75rem",
-                                    borderRadius: "var(--radius)",
+                                    padding: "0.3rem 0.45rem 0.3rem 0.65rem",
+                                    borderRadius: "999px",
                                     border: "1px solid var(--border)",
                                     backgroundColor: "var(--surface)",
-                                    cursor: "pointer",
                                     color: "var(--text)",
+                                    cursor: "pointer",
+                                    transition: "all 0.2s ease",
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.borderColor =
+                                        "var(--primary)";
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.borderColor =
+                                        "var(--border)";
                                 }}
                             >
+                                {/* Avatar */}
                                 <div
                                     style={{
+                                        width: "34px",
+                                        height: "34px",
                                         display: "flex",
-                                        height: "32px",
-                                        width: "32px",
                                         alignItems: "center",
                                         justifyContent: "center",
                                         borderRadius: "50%",
                                         backgroundColor: "var(--primary)",
-                                        color: "#ffffff",
-                                        fontSize: "0.875rem",
+                                        color: "#fff",
+                                        fontSize: "0.85rem",
                                         fontWeight: 700,
+                                        flexShrink: 0,
                                     }}
                                 >
                                     {user?.name?.charAt(0).toUpperCase()}
                                 </div>
 
-                                <span>
+                                {/* Name */}
+                                <span
+                                    style={{
+                                        maxWidth: "120px",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        whiteSpace: "nowrap",
+                                        fontSize: "0.9rem",
+                                        fontWeight: 500,
+                                    }}
+                                >
                                     {user?.name}
                                 </span>
 
@@ -228,44 +249,49 @@ export default function Header() {
                                 />
                             </button>
 
+                            {/* Dropdown */}
                             {profileOpen && (
                                 <div
                                     style={{
                                         position: "absolute",
+                                        top: "calc(100% + 10px)",
                                         right: 0,
-                                        marginTop: "0.75rem",
-                                        width: "270px",
-                                        overflow: "hidden",
-                                        borderRadius: "var(--radius)",
+                                        width: "260px",
+                                        padding: "0.5rem",
+                                        borderRadius: "14px",
                                         border: "1px solid var(--border)",
                                         backgroundColor: "var(--surface)",
-                                        boxShadow: "var(--shadow)",
-                                        padding: "0.5rem",
-                                        zIndex: 100,
+                                        boxShadow:
+                                            "0 12px 35px rgba(0, 0, 0, 0.12)",
+                                        zIndex: 1000,
                                     }}
                                 >
+                                    {/* User Information */}
                                     <div
                                         style={{
                                             display: "flex",
                                             alignItems: "center",
                                             gap: "0.75rem",
                                             padding: "0.75rem",
-                                            borderBottom:
-                                                "1px solid var(--border)",
+                                            marginBottom: "0.35rem",
+                                            borderRadius: "10px",
+                                            backgroundColor:
+                                                "var(--background)",
                                         }}
                                     >
                                         <div
                                             style={{
+                                                width: "42px",
+                                                height: "42px",
                                                 display: "flex",
-                                                height: "40px",
-                                                width: "40px",
                                                 alignItems: "center",
                                                 justifyContent: "center",
                                                 borderRadius: "50%",
                                                 backgroundColor: "var(--primary)",
-                                                color: "#ffffff",
+                                                color: "#fff",
                                                 fontSize: "1rem",
                                                 fontWeight: 700,
+                                                flexShrink: 0,
                                             }}
                                         >
                                             {user?.name?.charAt(0).toUpperCase()}
@@ -273,35 +299,42 @@ export default function Header() {
 
                                         <div
                                             style={{
-                                                overflow: "hidden",
+                                                minWidth: 0,
                                             }}
                                         >
-                                            <h3
+                                            <div
                                                 style={{
-                                                    margin: 0,
+                                                    color: "var(--text)",
                                                     fontSize: "0.9rem",
                                                     fontWeight: 600,
-                                                    color: "var(--text)",
                                                 }}
                                             >
                                                 {user?.name}
-                                            </h3>
+                                            </div>
 
-                                            <p
-                                                className="caption"
+                                            <div
                                                 style={{
-                                                    margin: "0.2rem 0 0",
-                                                    whiteSpace: "nowrap",
+                                                    marginTop: "2px",
+                                                    color: "var(--text-light)",
+                                                    fontSize: "0.75rem",
                                                     overflow: "hidden",
                                                     textOverflow: "ellipsis",
+                                                    whiteSpace: "nowrap",
                                                 }}
                                             >
                                                 {user?.email}
-                                            </p>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div style={{ paddingTop: "0.5rem" }}>
+                                    {/* Navigation */}
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            gap: "2px",
+                                        }}
+                                    >
                                         <Link
                                             to="/gallery"
                                             onClick={() =>
@@ -309,8 +342,8 @@ export default function Header() {
                                             }
                                             className="profile-link"
                                         >
-                                            <ImageIcon size={18} />
-                                            Gallery
+                                            <ImageIcon size={17} />
+                                            <span>Gallery</span>
                                         </Link>
 
                                         <Link
@@ -320,8 +353,8 @@ export default function Header() {
                                             }
                                             className="profile-link"
                                         >
-                                            <User size={18} />
-                                            Profile
+                                            <User size={17} />
+                                            <span>Profile</span>
                                         </Link>
 
                                         <Link
@@ -331,34 +364,48 @@ export default function Header() {
                                             }
                                             className="profile-link"
                                         >
-                                            <Settings size={18} />
-                                            Settings
+                                            <Settings size={17} />
+                                            <span>Settings</span>
                                         </Link>
-
-                                        <div
-                                            style={{
-                                                margin: "0.4rem 0",
-                                                borderTop:
-                                                    "1px solid var(--border)",
-                                            }}
-                                        />
-
-                                        <button
-                                            type="button"
-                                            onClick={handleLogout}
-                                            className="logout-button"
-                                        >
-                                            <LogOut size={18} />
-                                            Logout
-                                        </button>
                                     </div>
+
+                                    {/* Divider */}
+                                    <div
+                                        style={{
+                                            height: "1px",
+                                            backgroundColor: "var(--border)",
+                                            margin: "0.45rem 0",
+                                        }}
+                                    />
+
+                                    {/* Logout */}
+                                    <button
+                                        type="button"
+                                        onClick={handleLogout}
+                                        className="logout-button"
+                                        style={{
+                                            width: "100%",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: "0.65rem",
+                                            padding: "0.65rem 0.75rem",
+                                            border: "none",
+                                            borderRadius: "9px",
+                                            background: "transparent",
+                                            color: "var(--text-light)",
+                                            fontSize: "0.875rem",
+                                            cursor: "pointer",
+                                            textAlign: "left",
+                                            transition: "all 0.2s ease",
+                                        }}
+                                    >
+                                        <LogOut size={17} />
+                                        <span>Logout</span>
+                                    </button>
                                 </div>
                             )}
                         </div>
                     ) : (
-                        // ================================
-                        // NOT LOGGED IN
-                        // ================================
                         <div
                             style={{
                                 display: "flex",
@@ -369,9 +416,7 @@ export default function Header() {
                             <Link
                                 to="/login"
                                 className="btn"
-                                style={{
-                                    textDecoration: "none",
-                                }}
+                                style={{ textDecoration: "none" }}
                             >
                                 Login
                             </Link>
@@ -379,9 +424,7 @@ export default function Header() {
                             <Link
                                 to="/signup"
                                 className="btn"
-                                style={{
-                                    textDecoration: "none",
-                                }}
+                                style={{ textDecoration: "none" }}
                             >
                                 Sign Up
                             </Link>

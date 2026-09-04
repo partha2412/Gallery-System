@@ -194,33 +194,30 @@ export default function GalleryPage() {
                     {/* Search */}
 
                     <div className="search-box">
-                        {/* <Search size={17} className="icon" /> */}
-
                         <input
                             type="text"
                             placeholder="Search your photos"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             onKeyDown={(e) => {
-                                if (e.key === "Enter") {
+                                if (e.key === "Enter" && !searching) {
                                     handleSearch();
                                 }
                             }}
                             className="input"
                         />
-                        {/* <button
+
+                        <button
+                            type="button"
                             onClick={handleSearch}
                             disabled={searching}
-                            className="text-blue-600"
+                            className={`m-2 ${searching
+                                    ? "cursor-not-allowed opacity-50"
+                                    : "cursor-pointer hover:text-blue-400"
+                                }`}
                         >
-                            <Search size={17} />
-                        </button> */}
-                        <Search 
-                            size={17} 
-                            onClick={handleSearch}
-                            disabled={searching} 
-                            className="cursor-pointer m-2 hover:text-blue-300" 
-                        />
+                            <Search size={20} />
+                        </button>
                     </div>
 
                     {/* Upload Button */}
