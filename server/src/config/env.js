@@ -20,6 +20,8 @@ const envSchema = z.object({
   QDRANT_URL: z.string(),
   QDRANT_API_KEY: z.string().optional(),
   QDRANT_COLLECTION: z.string().default("image_embeddings"),
+
+  JINA_API_KEY:z.string().default(),
 });
 
 const parsed = envSchema.safeParse(process.env);

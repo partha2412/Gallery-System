@@ -23,6 +23,12 @@ export default class GalleryRepo {
         return await Gallery.findById(imageId);
     }
 
+    async findByIds(imageIds) {
+        return await Gallery.find({
+            _id: { $in: imageIds }
+        });
+    }
+
     // Update image
     async update(imageId, data) {
         return await Gallery.findByIdAndUpdate(

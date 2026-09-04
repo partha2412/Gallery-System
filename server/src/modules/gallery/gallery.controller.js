@@ -53,6 +53,32 @@ export default class GalleryController {
         });
     }
 
+    async searchImagesController(req, res) {
+        try {
+            const { query, scope = "mine" } = req.body;
+
+            const images =
+                await this.galleryService.searchImagesService(
+                    query,
+                    req.user.id,
+                    scope
+                );
+
+            return res.status(200).json({
+                success: true,
+                images,
+            });
+
+        } catch (error) {
+            console.error("SEARCH ERROR:", error);
+
+            return res.status(500).json({
+                success: false,
+                message: error.message,
+            });
+        }
+    }
+
     // Update image
     async updateImageController(req, res) {
         const image = await this.galleryService.updateImageService(

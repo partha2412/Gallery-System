@@ -14,11 +14,14 @@ import {
     getGalleryImages,
     uploadGalleryImage,
     deleteGalleryImage,
-} from "../api/gallery.api.js";
+    searchGalleryImages,
+} from "../api/gallery.api";
 
 export default function GalleryPage() {
     const [images, setImages] = useState([]);
     const [search, setSearch] = useState("");
+    const [searching, setSearching] = useState(false);
+    const [searchTimeout, setSearchTimeout] = useState(null);
     const [selectedImage, setSelectedImage] = useState(null);
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
@@ -105,10 +108,36 @@ export default function GalleryPage() {
     // ---------------------------------------
     // SEARCH
     // ---------------------------------------
+    const handleSearch = async () => {
+        if (!search.trim()) {
+            await fetchImages();
+            return;
+        }
 
-    const filteredImages = images.filter((image) =>
-        image.name?.toLowerCase().includes(search.toLowerCase())
-    );
+        try {
+            setSearching(true);
+
+            const response = await searchGalleryImages(
+                search.trim(),
+                viewMode
+            );
+
+            setImages(response.images || []);
+        } catch (error) {
+            console.error(
+                "Semantic search failed:",
+                error
+            );
+            showError(
+                error.response?.data?.message ||
+                "Search failed"
+            );
+        } finally {
+            setSearching(false);
+        }
+    };
+
+    const filteredImages = images;
 
     return (
         <main className="page">
@@ -165,14 +194,32 @@ export default function GalleryPage() {
                     {/* Search */}
 
                     <div className="search-box">
-                        <Search size={17} className="icon" />
+                        {/* <Search size={17} className="icon" /> */}
 
                         <input
                             type="text"
                             placeholder="Search your photos"
                             value={search}
-                            onChange={(event) => setSearch(event.target.value)}
+                            onChange={(e) => setSearch(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    handleSearch();
+                                }
+                            }}
                             className="input"
+                        />
+                        {/* <button
+                            onClick={handleSearch}
+                            disabled={searching}
+                            className="text-blue-600"
+                        >
+                            <Search size={17} />
+                        </button> */}
+                        <Search 
+                            size={17} 
+                            onClick={handleSearch}
+                            disabled={searching} 
+                            className="cursor-pointer m-2 hover:text-blue-300" 
                         />
                     </div>
 

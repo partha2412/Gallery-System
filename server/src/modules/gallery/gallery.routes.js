@@ -36,6 +36,16 @@ galleryRoutes.get(
     )
 );
 
+galleryRoutes.post(
+    "/search",
+    verifyAccessToken,
+    asyncHandler(
+        galleryController.searchImagesController.bind(
+            galleryController
+        )
+    )
+);
+
 // Get one image
 galleryRoutes.get(
     "/:imageId",

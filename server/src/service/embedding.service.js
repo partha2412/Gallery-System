@@ -1,49 +1,81 @@
-import { pipeline } from "@huggingface/transformers";
-import sharp from "sharp";
+import axios from "axios";
+import env from "../config/env.js";
 
 class EmbeddingService {
     constructor() {
-        this.extractor = null;
+        this.apiUrl = "https://api.jina.ai/v1/embeddings";
+        this.model = "jina-clip-v2";
     }
 
-    async initialize() {
-        if (this.extractor) {
-            return;
+    async generateImageEmbedding(imageBuffer) {
+        try {
+            const base64Image =
+                imageBuffer.toString("base64");
+
+            const response = await axios.post(
+                this.apiUrl,
+                {
+                    model: this.model,
+                    input: [
+                        {
+                            image: `data:image/jpeg;base64,${base64Image}`
+                        }
+                    ]
+                },
+                {
+                    headers: {
+                        Authorization:
+                            `Bearer ${env.JINA_API_KEY}`,
+                        "Content-Type":
+                            "application/json"
+                    }
+                }
+            );
+
+            return response.data.data[0].embedding;
+
+        } catch (error) {
+            console.error(
+                "Image embedding error:",
+                error.response?.data || error.message
+            );
+
+            throw error;
         }
-
-        console.log("Loading CLIP model...");
-
-        this.extractor = await pipeline(
-            "image-feature-extraction",
-            "Xenova/clip-vit-base-patch32"
-        );
-
-        console.log("CLIP model loaded");
     }
 
-    async generateImageEmbedding(buffer) {
-        await this.initialize();
+    async generateTextEmbedding(text) {
+        try {
+            const response = await axios.post(
+                this.apiUrl,
+                {
+                    model: this.model,
+                    input: [
+                        {
+                            text
+                        }
+                    ]
+                },
+                {
+                    headers: {
+                        Authorization:
+                            `Bearer ${env.JINA_API_KEY}`,
+                        "Content-Type":
+                            "application/json"
+                    }
+                }
+            );
 
-        const imageBuffer = await sharp(buffer)
-            .jpeg()
-            .toBuffer();
+            return response.data.data[0].embedding;
 
-        const imageBlob = new Blob(
-            [imageBuffer],
-            {
-                type: "image/jpeg",
-            }
-        );
+        } catch (error) {
+            console.error(
+                "Text embedding error:",
+                error.response?.data || error.message
+            );
 
-        const output = await this.extractor(
-            imageBlob,
-            {
-                pooling: "mean",
-                normalize: true,
-            }
-        );
-
-        return Array.from(output.data);
+            throw error;
+        }
     }
 }
 

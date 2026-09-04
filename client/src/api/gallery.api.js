@@ -10,6 +10,15 @@ export const getGalleryImages = async () => {
     return response.data;
 };
 
+export const searchGalleryImages = async (query) => {
+    const response = await api.post(
+        "/api/v1/gallery/search",
+        { query }
+    );
+
+    return response.data;
+};
+
 export const uploadGalleryImage = async (file) => {
     const formData = new FormData();
 
