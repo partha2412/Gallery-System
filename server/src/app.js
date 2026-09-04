@@ -5,12 +5,15 @@ import authRoutes from "./modules/auth/auth.route.js";
 import errorHandler from "./middlewares/errorHandler.middleware.js";
 import galleryRoutes from "./modules/gallery/gallery.routes.js";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 // import logger f0rom "./config/logger.js";
 export default function createApp() {
   const app = express();
 
   securityMiddleware(app);
   GoogleMiddleware();
+
+  app.use(cookieParser());
 
   app.get("/health", async (req, res) => {
     try {

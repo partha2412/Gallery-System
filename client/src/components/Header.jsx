@@ -12,7 +12,6 @@ import {
     X,
     Sparkles,
 } from "lucide-react";
-import { logoutUser } from "../api/auth.api.js";
 
 export default function Header() {
     const navigate = useNavigate();
@@ -43,17 +42,15 @@ export default function Header() {
 
     const handleLogout = async () => {
         try {
-            await logoutUser();   // Wait for server to clear cookies
+            await logout();
         } catch (err) {
             console.error(err);
         }
 
-        logout();
         setProfileOpen(false);
         setMobileOpen(false);
         navigate("/login");
     };
-
     return (
         <header
             style={{
@@ -173,240 +170,223 @@ export default function Header() {
                     />
 
                     {/* User Profile Dropdown */}
-                    <div style={{ position: "relative" }} ref={profileRef}>
-                        <button
-                            type="button"
-                            onClick={() => setProfileOpen((prev) => !prev)}
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "0.6rem",
-                                padding: "0.35rem 0.75rem",
-                                borderRadius: "var(--radius)",
-                                border: "1px solid var(--border)",
-                                backgroundColor: "var(--surface)",
-                                cursor: "pointer",
-                                color: "var(--text)",
-                            }}
+                    {isLoggedIn ? (
+                        // ================================
+                        // LOGGED IN
+                        // ================================
+                        <div
+                            style={{ position: "relative" }}
+                            ref={profileRef}
                         >
-                            <div
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setProfileOpen((prev) => !prev)
+                                }
                                 style={{
                                     display: "flex",
-                                    height: "32px",
-                                    width: "32px",
                                     alignItems: "center",
-                                    justifyContent: "center",
-                                    borderRadius: "50%",
-                                    backgroundColor: "var(--primary)",
-                                    color: "#ffffff",
-                                    fontSize: "0.875rem",
-                                    fontWeight: 700,
-                                }}
-                            >
-                                {user?.name[0]}
-                            </div>
-
-                            <ChevronDown
-                                size={16}
-                                style={{
-                                    color: "var(--text-light)",
-                                    transition: "transform 0.2s ease",
-                                    transform: profileOpen ? "rotate(180deg)" : "rotate(0deg)",
-                                }}
-                            />
-                        </button>
-
-                        {profileOpen && (
-                            <div
-                                style={{
-                                    position: "absolute",
-                                    right: 0,
-                                    marginTop: "0.75rem",
-                                    width: "270px",
-                                    overflow: "hidden",
+                                    gap: "0.6rem",
+                                    padding: "0.35rem 0.75rem",
                                     borderRadius: "var(--radius)",
                                     border: "1px solid var(--border)",
                                     backgroundColor: "var(--surface)",
-                                    boxShadow: "var(--shadow)",
-                                    padding: "0.5rem",
-                                    zIndex: 100,
+                                    cursor: "pointer",
+                                    color: "var(--text)",
                                 }}
                             >
-                                {/* User Info Section */}
                                 <div
                                     style={{
                                         display: "flex",
+                                        height: "32px",
+                                        width: "32px",
                                         alignItems: "center",
-                                        gap: "0.75rem",
-                                        padding: "0.75rem",
-                                        borderBottom: "1px solid var(--border)",
+                                        justifyContent: "center",
+                                        borderRadius: "50%",
+                                        backgroundColor: "var(--primary)",
+                                        color: "#ffffff",
+                                        fontSize: "0.875rem",
+                                        fontWeight: 700,
+                                    }}
+                                >
+                                    {user?.name?.charAt(0).toUpperCase()}
+                                </div>
+
+                                <span>
+                                    {user?.name}
+                                </span>
+
+                                <ChevronDown
+                                    size={16}
+                                    style={{
+                                        color: "var(--text-light)",
+                                        transition: "transform 0.2s ease",
+                                        transform: profileOpen
+                                            ? "rotate(180deg)"
+                                            : "rotate(0deg)",
+                                    }}
+                                />
+                            </button>
+
+                            {profileOpen && (
+                                <div
+                                    style={{
+                                        position: "absolute",
+                                        right: 0,
+                                        marginTop: "0.75rem",
+                                        width: "270px",
+                                        overflow: "hidden",
+                                        borderRadius: "var(--radius)",
+                                        border: "1px solid var(--border)",
+                                        backgroundColor: "var(--surface)",
+                                        boxShadow: "var(--shadow)",
+                                        padding: "0.5rem",
+                                        zIndex: 100,
                                     }}
                                 >
                                     <div
                                         style={{
                                             display: "flex",
-                                            height: "40px",
-                                            width: "40px",
-                                            flexShrink: 0,
                                             alignItems: "center",
-                                            justifyContent: "center",
-                                            borderRadius: "50%",
-                                            backgroundColor: "var(--primary)",
-                                            color: "#ffffff",
-                                            fontSize: "1rem",
-                                            fontWeight: 700,
+                                            gap: "0.75rem",
+                                            padding: "0.75rem",
+                                            borderBottom:
+                                                "1px solid var(--border)",
                                         }}
                                     >
-                                        {user?.name[0]}
-                                    </div>
-                                    <div style={{ overflow: "hidden" }}>
-                                        <h3
+                                        <div
                                             style={{
-                                                margin: 0,
-                                                fontSize: "0.9rem",
-                                                fontWeight: 600,
-                                                color: "var(--text)",
-                                                whiteSpace: "nowrap",
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
+                                                display: "flex",
+                                                height: "40px",
+                                                width: "40px",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                borderRadius: "50%",
+                                                backgroundColor: "var(--primary)",
+                                                color: "#ffffff",
+                                                fontSize: "1rem",
+                                                fontWeight: 700,
                                             }}
                                         >
-                                            {user?.name}
-                                        </h3>
-                                        <p
-                                            className="caption"
+                                            {user?.name?.charAt(0).toUpperCase()}
+                                        </div>
+
+                                        <div
                                             style={{
-                                                margin: "0.2rem 0 0 0",
-                                                whiteSpace: "nowrap",
                                                 overflow: "hidden",
-                                                textOverflow: "ellipsis",
                                             }}
                                         >
-                                            {user?.email}
-                                        </p>
+                                            <h3
+                                                style={{
+                                                    margin: 0,
+                                                    fontSize: "0.9rem",
+                                                    fontWeight: 600,
+                                                    color: "var(--text)",
+                                                }}
+                                            >
+                                                {user?.name}
+                                            </h3>
+
+                                            <p
+                                                className="caption"
+                                                style={{
+                                                    margin: "0.2rem 0 0",
+                                                    whiteSpace: "nowrap",
+                                                    overflow: "hidden",
+                                                    textOverflow: "ellipsis",
+                                                }}
+                                            >
+                                                {user?.email}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div style={{ paddingTop: "0.5rem" }}>
+                                        <Link
+                                            to="/gallery"
+                                            onClick={() =>
+                                                setProfileOpen(false)
+                                            }
+                                            className="profile-link"
+                                        >
+                                            <ImageIcon size={18} />
+                                            Gallery
+                                        </Link>
+
+                                        <Link
+                                            to="/profile"
+                                            onClick={() =>
+                                                setProfileOpen(false)
+                                            }
+                                            className="profile-link"
+                                        >
+                                            <User size={18} />
+                                            Profile
+                                        </Link>
+
+                                        <Link
+                                            to="/settings"
+                                            onClick={() =>
+                                                setProfileOpen(false)
+                                            }
+                                            className="profile-link"
+                                        >
+                                            <Settings size={18} />
+                                            Settings
+                                        </Link>
+
+                                        <div
+                                            style={{
+                                                margin: "0.4rem 0",
+                                                borderTop:
+                                                    "1px solid var(--border)",
+                                            }}
+                                        />
+
+                                        <button
+                                            type="button"
+                                            onClick={handleLogout}
+                                            className="logout-button"
+                                        >
+                                            <LogOut size={18} />
+                                            Logout
+                                        </button>
                                     </div>
                                 </div>
+                            )}
+                        </div>
+                    ) : (
+                        // ================================
+                        // NOT LOGGED IN
+                        // ================================
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "0.5rem",
+                            }}
+                        >
+                            <Link
+                                to="/login"
+                                className="btn"
+                                style={{
+                                    textDecoration: "none",
+                                }}
+                            >
+                                Login
+                            </Link>
 
-                                {/* Dropdown Links */}
-                                <div style={{ paddingTop: "0.5rem" }}>
-                                    <Link
-                                        to="/gallery"
-                                        onClick={() => setProfileOpen(false)}
-                                        style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "0.75rem",
-                                            padding: "0.6rem 0.85rem",
-                                            fontSize: "0.875rem",
-                                            color: "var(--text)",
-                                            textDecoration: "none",
-                                            borderRadius: "10px",
-                                            transition: "background 0.2s",
-                                        }}
-                                        onMouseEnter={(e) =>
-                                        (e.currentTarget.style.backgroundColor =
-                                            "rgba(255,255,255,0.06)")
-                                        }
-                                        onMouseLeave={(e) =>
-                                            (e.currentTarget.style.backgroundColor = "transparent")
-                                        }
-                                    >
-                                        <ImageIcon size={18} className="icon" />
-                                        Gallery
-                                    </Link>
-
-                                    <Link
-                                        to="/profile"
-                                        onClick={() => setProfileOpen(false)}
-                                        style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "0.75rem",
-                                            padding: "0.6rem 0.85rem",
-                                            fontSize: "0.875rem",
-                                            color: "var(--text)",
-                                            textDecoration: "none",
-                                            borderRadius: "10px",
-                                            transition: "background 0.2s",
-                                        }}
-                                        onMouseEnter={(e) =>
-                                        (e.currentTarget.style.backgroundColor =
-                                            "rgba(255,255,255,0.06)")
-                                        }
-                                        onMouseLeave={(e) =>
-                                            (e.currentTarget.style.backgroundColor = "transparent")
-                                        }
-                                    >
-                                        <User size={18} className="icon" />
-                                        Profile
-                                    </Link>
-
-                                    <Link
-                                        to="/settings"
-                                        onClick={() => setProfileOpen(false)}
-                                        style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "0.75rem",
-                                            padding: "0.6rem 0.85rem",
-                                            fontSize: "0.875rem",
-                                            color: "var(--text)",
-                                            textDecoration: "none",
-                                            borderRadius: "10px",
-                                            transition: "background 0.2s",
-                                        }}
-                                        onMouseEnter={(e) =>
-                                        (e.currentTarget.style.backgroundColor =
-                                            "rgba(255,255,255,0.06)")
-                                        }
-                                        onMouseLeave={(e) =>
-                                            (e.currentTarget.style.backgroundColor = "transparent")
-                                        }
-                                    >
-                                        <Settings size={18} className="icon" />
-                                        Settings
-                                    </Link>
-
-                                    <div
-                                        style={{
-                                            margin: "0.4rem 0",
-                                            borderTop: "1px solid var(--border)",
-                                        }}
-                                    />
-
-                                    <button
-                                        type="button"
-                                        onClick={handleLogout}
-                                        style={{
-                                            display: "flex",
-                                            width: "100%",
-                                            alignItems: "center",
-                                            gap: "0.75rem",
-                                            padding: "0.6rem 0.85rem",
-                                            fontSize: "0.875rem",
-                                            color: "var(--danger)",
-                                            backgroundColor: "transparent",
-                                            border: "none",
-                                            borderRadius: "10px",
-                                            cursor: "pointer",
-                                            textAlign: "left",
-                                            transition: "background 0.2s",
-                                        }}
-                                        onMouseEnter={(e) =>
-                                        (e.currentTarget.style.backgroundColor =
-                                            "rgba(239, 68, 68, 0.1)")
-                                        }
-                                        onMouseLeave={(e) =>
-                                            (e.currentTarget.style.backgroundColor = "transparent")
-                                        }
-                                    >
-                                        <LogOut size={18} />
-                                        Logout
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                            <Link
+                                to="/signup"
+                                className="btn"
+                                style={{
+                                    textDecoration: "none",
+                                }}
+                            >
+                                Sign Up
+                            </Link>
+                        </div>
+                    )}
                 </div>
 
                 {/* Mobile Toggle Button */}

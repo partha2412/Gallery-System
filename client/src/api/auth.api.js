@@ -3,8 +3,12 @@ import api from "./axios";
 // ================================
 // REGISTER
 // ================================
-export const registerUser = async (data) => {    
-    const response = await api.post("/api/user/register", data);
+export const registerUser = async (data) => {
+    const response = await api.post(
+        "/api/user/register",
+        data
+    );
+
     return response.data;
 };
 
@@ -12,18 +16,36 @@ export const registerUser = async (data) => {
 // LOGIN
 // ================================
 export const loginUser = async (data) => {
-    const response = await api.post("/api/user/login", data);    
-    // console.log(response);
+    const response = await api.post(
+        "/api/user/login",
+        data
+    );
+
     return response.data;
 };
 
 // ================================
-// Email check
+// GET CURRENT USER
+// ================================
+export const getMe = async () => {
+    const response = await api.get(
+        "/api/user/me"
+    );
+
+    return response.data;
+};
+
+// ================================
+// EMAIL CHECK
 // ================================
 export const checkEmail = async (email) => {
-    const response = await api.post("/api/user/check-email", {
-        email,
-    });
+    const response = await api.post(
+        "/api/user/check-email",
+        {
+            email,
+        }
+    );
+
     return response.data;
 };
 
@@ -31,9 +53,10 @@ export const checkEmail = async (email) => {
 // LOGOUT
 // ================================
 export const logoutUser = async () => {
-    const response = await api.post("/api/user/logout");
-    // console.log(response);
-    
+    const response = await api.post(
+        "/api/user/logout"
+    );
+
     return response.data;
 };
 
@@ -41,7 +64,10 @@ export const logoutUser = async () => {
 // REFRESH ACCESS TOKEN
 // ================================
 export const refreshAccessToken = async () => {
-    const response = await api.post("/auth/refresh");
+    const response = await api.post(
+        "/api/user/refresh"
+    );
+
     return response.data;
 };
 
@@ -49,19 +75,22 @@ export const refreshAccessToken = async () => {
 // FORGOT PASSWORD
 // ================================
 export const forgotPassword = async (email) => {
-    const response = await api.post("/auth/forgot-password", {
-        email,
-    });
+    const response = await api.post(
+        "/api/user/forgot_password",
+        {
+            email,
+        }
+    );
 
     return response.data;
 };
 
 // ================================
-// UPDATE PASSWORD
+// RESET / UPDATE PASSWORD
 // ================================
 export const updatePassword = async (token, password) => {
-    const response = await api.patch(
-        `/auth/reset-password/${token}`,
+    const response = await api.post(
+        `/api/user/reset-password/${token}`,
         {
             password,
         }

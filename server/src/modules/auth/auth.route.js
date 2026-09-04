@@ -1,11 +1,18 @@
 import { Router } from "express";
 import AuthController from "./auth.controller.js";
 import asyncHandler from "../../utils/asyncHandler.js";
+import { isAuth } from "../../middlewares/auth.middleware.js";
 import * as validation from "../../validation/validationRule.js";
 import passport from "passport";
 const authRoutes = Router();
 
 const authController = new AuthController();
+
+authRoutes.get(
+  "/me",
+  isAuth,
+  asyncHandler(authController.getMeController.bind(authController))
+);
 
 authRoutes.post(
   "/register",
@@ -20,7 +27,10 @@ authRoutes.post(
 );
 authRoutes.post(
   "/logout",
-  authController.logoutController.bind(authController)
+  isAuth,
+  asyncHandler(
+    authController.logoutController.bind(authController)
+  )
 );
 authRoutes.post(
   "/check-email",

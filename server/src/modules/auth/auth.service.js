@@ -10,6 +10,23 @@ export default class AuthService {
   constructor() {
     this.authService = new UserRepo();
   }
+
+  async getMeService(userId) {
+    const user = await this.authService.findById(userId);
+
+    if (!user) {
+      throw new error.NOTFOUNDERROR("User not found");
+    }
+
+    return {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      mobile: user.mobile,
+      authProvider: user.authProvider,
+    };
+  }
+  
   // THIS IS THE REGISTRATION LOGIC
   async createUserService(data) {
     let { name, email, password, mobile } = data;
@@ -30,17 +47,23 @@ export default class AuthService {
 
   // THIS IS LOGIN LOGIC
   async loginUserService(data) {
-    let { email, password } = data;
+    const { email, password } = data;
 
-    if (!email || !password)
+    if (!email || !password) {
       throw new error.NOTFOUNDERROR("all fields are required");
+    }
 
     const isExisted = await this.authService.findByEmail(email);
-    if (!isExisted) throw new error.NOTFOUNDERROR("user not found");
 
-    const compare = isExisted.comparePassword(password);
+    if (!isExisted) {
+      throw new error.NOTFOUNDERROR("user not found");
+    }
 
-    if (!compare) throw new error.UNAUTHORIZED("Wrong Credential");
+    const compare = await isExisted.comparePassword(password);
+
+    if (!compare) {
+      throw new error.UNAUTHORIZED("Wrong Credential");
+    }
 
     const accessToken = token.generateAccessToken(isExisted._id);
     const refreshToken = token.generateRefreshToken(isExisted._id);
@@ -48,7 +71,19 @@ export default class AuthService {
     isExisted.refreshToken = refreshToken;
     await isExisted.save();
 
-    return { accessToken, refreshToken, isExisted };
+    const user = {
+      _id: isExisted._id,
+      name: isExisted.name,
+      email: isExisted.email,
+      mobile: isExisted.mobile,
+      authProvider: isExisted.authProvider,
+    };
+
+    return {
+      accessToken,
+      refreshToken,
+      user,
+    };
   }
 
   async logoutService(userId) {
@@ -94,27 +129,27 @@ export default class AuthService {
   //     return await sendEmail(isExisted.email, "forgot password", sendMail);
   //   }
 
-  //   async resetPasswordService(data) {
-  //     let { token } = data;
-  //     const decode = jwt.verify(token, env.RAWTOKEN);
-  //     if (!decode) throw new error.UNAUTHORIZED("user not found");
-  //     const user = await this.authService.findById(decode.id);
+    async resetPasswordService(data) {
+      let { token } = data;
+      const decode = jwt.verify(token, env.RAWTOKEN);
+      if (!decode) throw new error.UNAUTHORIZED("user not found");
+      const user = await this.authService.findById(decode.id);
 
-  //     return user;
-  //   }
+      return user;
+    }
 
-  //   async updatePasswordService(_id, pass) {
-  //     let { id } = _id;
-  //     let { password } = pass;
-  //     console.log(id);
-  //     console.log(password);
-  //     const user = await this.authService.findById(id);
-  //     console.log(user);
-  //     if (!user) throw new error.NOTFOUNDERROR("user not found");
-  //     const hashPassword = await bcrypt.hash(password, 10);
+    async updatePasswordService(_id, pass) {
+      let { id } = _id;
+      let { password } = pass;
+      console.log(id);
+      console.log(password);
+      const user = await this.authService.findById(id);
+      console.log(user);
+      if (!user) throw new error.NOTFOUNDERROR("user not found");
+      const hashPassword = await bcrypt.hash(password, 10);
 
-  //     const update = await this.authService.updatePassword(id, hashPassword);
+      const update = await this.authService.updatePassword(id, hashPassword);
 
-  //     return update;
-  //   }
+      return update;
+    }
 }

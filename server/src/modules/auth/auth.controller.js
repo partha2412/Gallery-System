@@ -8,52 +8,68 @@ export default class AuthController {
   async createUserController(req, res) {
     const user = await this.authController.createUserService(req.body);
 
-    res.cookie(
-      "accessToken",
-      user.accessToken,
-      app_constant.cookie.accessToken,
-    );
-    res.cookie(
-      "refreshToken",
-      user.refreshToken,
-      app_constant.cookie.refreshToken,
-    );
+    // res.cookie(
+    //   "accessToken",
+    //   user.accessToken,
+    //   app_constant.cookie.accessToken,
+    // );
+    // res.cookie(
+    //   "refreshToken",
+    //   user.refreshToken,
+    //   app_constant.cookie.refreshToken,
+    // );
     res
       .status(201)
       .json({ message: "User created successfully", user: user.user });
   }
 
-  async loginUserController(req, res) {
-    const user = await this.authController.loginUserService(req.body);
-    res.cookie(
-      "accessToken",
-      user.accessToken,
-      app_constant.cookie.accessToken,
-    );
-    res.cookie(
-      "refreshToken",
-      user.refreshToken,
-      app_constant.cookie.refreshToken,
-    );
-    res
-      .status(200)
-      .json({ message: "User login successfully", user: user.isExisted });
+  async getMeController(req, res) {
+    const user = await this.authController.getMeService(req.userId);
+
+    return res.status(200).json({
+      success: true,
+      user,
+    });
   }
-  async logoutController(req, res) {
 
-    await this.authController.logoutService(req.user.id);
+  async loginUserController(req, res) {
+    const { accessToken, refreshToken, user } =
+      await this.authController.loginUserService(req.body);
 
-    res.clearCookie(
-      "accessToken",
+    res.cookie(
+      "accesstoken",
+      accessToken,
       app_constant.cookie.accessToken
     );
 
-    res.clearCookie(
-      "refreshToken",
+    res.cookie(
+      "refreshtoken",
+      refreshToken,
       app_constant.cookie.refreshToken
     );
 
-    return res.json({
+    return res.status(200).json({
+      success: true,
+      message: "Login successful",
+      user,
+    });
+  }
+
+  async logoutController(req, res) {
+    await this.authController.logoutService(req.userId);
+
+    res.clearCookie(
+      "accesstoken",
+      app_constant.cookie.clear
+    );
+
+    res.clearCookie(
+      "refreshtoken",
+      app_constant.cookie.clear
+    );
+
+    return res.status(200).json({
+      success: true,
       message: "Logged out successfully",
     });
   }
