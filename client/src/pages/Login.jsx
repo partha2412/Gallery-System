@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import "../styles/pages/Login.css";
-
-import { loginUser, checkEmail } from "../api/auth.api";
-import { showError, showSuccess } from "../utils/toast";
+import { loginUser, checkEmail } from "../api/auth.api.js";
+import { showSuccess, showError } from "../utils/toast.js";
 import { useAuth } from "../context/AuthContext";
 
-export default function LoginForm({ onSwitch }) {
-  const { login } = useAuth();
+const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [username, setUsername] = useState("");
   const [domain, setDomain] = useState("@gmail.com");
@@ -19,23 +17,14 @@ export default function LoginForm({ onSwitch }) {
   const [emailStatus, setEmailStatus] = useState("");
   const [emailAvailable, setEmailAvailable] = useState(null);
 
-  // ===============================
-  // AJAX Email Check
-  // ===============================
+  const email = `${username}${domain}`;
 
   useEffect(() => {
-
-    if (!username.trim()) {
+    if (!username) {
       setEmailStatus("");
       setEmailAvailable(null);
       return;
     }
-
-    const finalDomain = domain.startsWith("@")
-      ? domain
-      : `@${domain}`;
-
-    const email = `${username}${finalDomain}`;
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -46,50 +35,50 @@ export default function LoginForm({ onSwitch }) {
     }
 
     const timer = setTimeout(async () => {
-
       try {
-
         setCheckingEmail(true);
 
         const response = await checkEmail(email);
-        // console.log(response);
 
         setEmailAvailable(response.available);
-        setEmailStatus(!response.available ? "Email exist" : "Email not exist");
 
-      } catch (err) {
+        setEmailStatus(
+          response.available
+            ? "Email does not exist"
+            : "Email exists"
+        );
+      } catch (error) {
+        console.error("Email check failed:", error);
 
-        setEmailAvailable(null);
         setEmailStatus("");
-
+        setEmailAvailable(null);
       } finally {
-
         setCheckingEmail(false);
-
       }
-
     }, 500);
 
     return () => clearTimeout(timer);
-
   }, [username, domain]);
 
-  // ===============================
-  // Login
-  // ===============================
-
   const handleSubmit = async (e) => {
-
     e.preventDefault();
 
-    const finalDomain = domain.startsWith("@")
-      ? domain
-      : `@${domain}`;
+    if (!username || !password) {
+      showError("Please fill all fields");
+      return;
+    }
 
-    const email = `${username}${finalDomain}`;
+    if (checkingEmail) {
+      showError("Please wait while checking email");
+      return;
+    }
+
+    if (emailAvailable === true) {
+      showError("Email does not exist");
+      return;
+    }
 
     try {
-
       const data = await loginUser({
         email,
         password,
@@ -97,96 +86,107 @@ export default function LoginForm({ onSwitch }) {
 
       login(data.user);
 
-      showSuccess(data.message);
+      showSuccess("Login successful");
 
       navigate("/gallery");
-
     } catch (error) {
+      console.error("Login failed:", error);
 
-      showError(error.message);
-
+      showError(
+        error?.response?.data?.message ||
+        error?.message ||
+        "Login failed"
+      );
     }
-
   };
 
   return (
+    <form onSubmit={handleSubmit} className="space-y-5">
 
-    <form onSubmit={handleSubmit}>
+      {/* Email */}
+      <div>
+        <label className="block text-sm font-medium text-[#292825] mb-2">
+          Email
+        </label>
 
-      <div className="form-group">
-        <div className="flex gap-3">
-          <label>Email</label>
-          <label>
-            {checkingEmail && (
-              <small style={{ color: "#6b7280" }}>
-                Checking email...
-              </small>
-            )}
-
-            {!checkingEmail && emailStatus && (
-              <small
-                style={{
-                  color: !emailAvailable ? "#16a34a" : "#dc2626",
-                  fontWeight: 500,
-                }}
-              >
-                {emailStatus}
-              </small>
-            )}
-          </label>
-        </div>
-
-        <div className="email-wrapper">
-
+        <div className="flex h-11">
           <input
             type="text"
-            className="username-input"
-            placeholder="Username"
+            placeholder="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            required
+            className="flex-1 min-w-0 px-3 rounded-l-xl border border-r-0 border-[#d9d5cd] bg-white text-sm text-[#292825] outline-none focus:border-[#8c7a5b] focus:ring-1 focus:ring-[#8c7a5b]"
           />
 
-          <input
-            type="text"
-            className="domain-input"
+          <select
             value={domain}
             onChange={(e) => setDomain(e.target.value)}
-            required
-          />
-
+            className="w-[125px] px-2 rounded-r-xl border border-[#d9d5cd] bg-[#f7f6f3] text-sm text-[#292825] outline-none focus:border-[#8c7a5b]"
+          >
+            <option value="@gmail.com">@gmail.com</option>
+            <option value="@outlook.com">@outlook.com</option>
+            <option value="@yahoo.com">@yahoo.com</option>
+          </select>
         </div>
 
+        {/* Email Status */}
+        {checkingEmail && (
+          <p className="mt-2 text-[11px] font-medium text-[#8a857d]">
+            Checking email...
+          </p>
+        )}
+
+        {!checkingEmail && emailStatus && (
+          <p
+            className={`mt-2 text-[11px] font-medium ${emailAvailable === false
+                ? "text-emerald-600"
+                : "text-red-600"
+              }`}
+          >
+            {emailStatus}
+          </p>
+        )}
       </div>
 
-      <div className="form-group">
-
-        <label>Password</label>
+      {/* Password */}
+      <div>
+        <label className="block text-sm font-medium text-[#292825] mb-2">
+          Password
+        </label>
 
         <input
           type="password"
+          placeholder="Enter your password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          required
+          className="w-full h-11 px-3 rounded-xl border border-[#d9d5cd] bg-white text-sm text-[#292825] placeholder:text-[#aaa59d] outline-none focus:border-[#8c7a5b] focus:ring-1 focus:ring-[#8c7a5b]"
         />
-
       </div>
 
-      <button type="submit">
-        Sign In
+      {/* Submit */}
+      <button
+        type="submit"
+        disabled={checkingEmail}
+        className="w-full h-11 rounded-xl bg-[#1b1b1a] text-white text-sm font-medium hover:bg-[#2b2b29] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+      >
+        {checkingEmail ? "Checking..." : "Log In"}
       </button>
 
-      <p>
-        Need an account?{" "}
+      {/* Switch */}
+      <div className="text-center pt-1">
         <button
           type="button"
-          onClick={onSwitch}
+          onClick={() => navigate("/signup")}
+          className="text-xs text-[#77736c] hover:text-[#292825] transition-colors"
         >
-          Sign Up
+          Don't have an account?{" "}
+          <span className="font-medium text-[#7d6849]">
+            Sign Up
+          </span>
         </button>
-      </p>
-
+      </div>
     </form>
-
   );
-}
+};
+
+export default Login; 

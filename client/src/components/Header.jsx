@@ -16,7 +16,6 @@ import {
 export default function Header() {
     const navigate = useNavigate();
 
-    // Replace with your auth state/context
     const {
         user,
         isLoggedIn,
@@ -37,7 +36,9 @@ export default function Header() {
         };
 
         document.addEventListener("mousedown", close);
-        return () => document.removeEventListener("mousedown", close);
+
+        return () =>
+            document.removeEventListener("mousedown", close);
     }, []);
 
     const handleLogout = async () => {
@@ -51,538 +52,448 @@ export default function Header() {
         setMobileOpen(false);
         navigate("/login");
     };
+
     return (
-        <header
-            style={{
-                position: "sticky",
-                top: 0,
-                zIndex: 50,
-                width: "100%",
-                backgroundColor: "var(--background)",
-                borderBottom: "1px solid var(--border)",
-                backdropFilter: "blur(12px)",
-            }}
-        >
-            <div
-                className="container"
-                style={{
-                    display: "flex",
-                    height: "64px",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                }}
-            >
-                {/* Brand / Logo */}
+        <header className="sticky top-0 z-50 w-full border-b border-black/[0.06] bg-white/80 backdrop-blur-xl">
+
+            {/* ========================================= */}
+            {/* DESKTOP / MAIN HEADER */}
+            {/* ========================================= */}
+
+            <div className="mx-auto flex h-[68px] w-full max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-10">
+
+                {/* ===================================== */}
+                {/* BRAND */}
+                {/* ===================================== */}
+
                 <Link
                     to="/"
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.75rem",
-                        textDecoration: "none",
-                    }}
+                    className="group flex items-center gap-3 no-underline"
                 >
-                    <div
-                        style={{
-                            display: "flex",
-                            height: "40px",
-                            width: "40px",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            borderRadius: "var(--radius)",
-                            backgroundColor: "var(--primary)",
-                            color: "#ffffff",
-                            boxShadow: "var(--shadow)",
-                        }}
-                    >
-                        <Sparkles size={20} />
+                    {/* Logo */}
+
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#111111] text-white shadow-sm transition-transform duration-200 group-hover:scale-[1.03]">
+                        <Sparkles
+                            size={17}
+                            strokeWidth={1.8}
+                        />
                     </div>
 
-                    <div>
-                        <h1
-                            style={{
-                                fontSize: "1rem",
-                                fontWeight: 700,
-                                color: "var(--text)",
-                                margin: 0,
-                                lineHeight: 1.2,
-                            }}
-                        >
+                    {/* Brand text */}
+
+                    <div className="hidden sm:block">
+                        <h1 className="text-[14px] font-semibold tracking-[-0.02em] text-[#111111]">
                             Media Operator
                         </h1>
-                        <p className="subtitle" style={{ margin: 0, fontSize: "0.75rem" }}>
-                            file folders
+
+                        <p className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.15em] text-black/30">
+                            File folders
                         </p>
                     </div>
                 </Link>
 
-                {/* Desktop Navigation & Actions */}
-                <div
-                    className="desktop-menu"
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.75rem",
-                    }}
-                >
+                {/* ===================================== */}
+                {/* DESKTOP MENU */}
+                {/* ===================================== */}
+
+                <div className="hidden items-center gap-2 sm:flex">
+
+                    {/* Gallery */}
+
                     <Link
                         to="/gallery"
-                        className="btn"
-                        style={{
-                            padding: "0.5rem 1rem",
-                            fontSize: "0.9rem",
-                            textDecoration: "none",
-                            color: "var(--text-light)",
-                            backgroundColor: "transparent",
-                        }}
+                        className="group flex h-10 items-center gap-2 rounded-xl px-3.5 text-sm font-medium text-black/50 no-underline transition-all duration-200 hover:bg-black/[0.04] hover:text-black"
                     >
-                        <ImageIcon size={18} className="icon" />
-                        Gallery
+                        <ImageIcon
+                            size={17}
+                            strokeWidth={1.7}
+                            className="text-black/35 transition-colors group-hover:text-black/70"
+                        />
+
+                        <span>Gallery</span>
                     </Link>
+
+                    {/* Notification */}
 
                     <button
                         type="button"
                         aria-label="Notifications"
-                        className="icon-btn"
-                        style={{ position: "relative" }}
+                        className="relative flex h-10 w-10 items-center justify-center rounded-xl text-black/40 transition-all duration-200 hover:bg-black/[0.04] hover:text-black"
                     >
-                        <Bell size={18} />
-                        <span
-                            style={{
-                                position: "absolute",
-                                top: "8px",
-                                right: "8px",
-                                width: "8px",
-                                height: "8px",
-                                borderRadius: "50%",
-                                backgroundColor: "var(--secondary)",
-                            }}
+                        <Bell
+                            size={18}
+                            strokeWidth={1.7}
                         />
+
+                        {/* Notification dot */}
+
+                        <span className="absolute right-[9px] top-[8px] h-1.5 w-1.5 rounded-full bg-black" />
                     </button>
 
-                    <div
-                        style={{
-                            height: "20px",
-                            width: "1px",
-                            backgroundColor: "var(--border)",
-                            margin: "0 0.25rem",
-                        }}
-                    />
+                    {/* Divider */}
 
-                    {/* User Profile Dropdown */}
+                    <div className="mx-2 h-6 w-px bg-black/[0.07]" />
+
+                    {/* ================================= */}
+                    {/* LOGGED IN */}
+                    {/* ================================= */}
+
                     {isLoggedIn ? (
                         <div
                             ref={profileRef}
-                            style={{
-                                position: "relative",
-                            }}
+                            className="relative"
                         >
-                            {/* Profile Trigger */}
+
+                            {/* Profile trigger */}
+
                             <button
                                 type="button"
                                 onClick={() =>
-                                    setProfileOpen((prev) => !prev)
+                                    setProfileOpen(
+                                        (prev) => !prev
+                                    )
                                 }
-                                style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: "0.6rem",
-                                    padding: "0.3rem 0.45rem 0.3rem 0.65rem",
-                                    borderRadius: "999px",
-                                    border: "1px solid var(--border)",
-                                    backgroundColor: "var(--surface)",
-                                    color: "var(--text)",
-                                    cursor: "pointer",
-                                    transition: "all 0.2s ease",
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.borderColor =
-                                        "var(--primary)";
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.borderColor =
-                                        "var(--border)";
-                                }}
+                                className={`flex h-10 items-center gap-2 rounded-xl border px-1.5 pr-2.5 transition-all duration-200 ${profileOpen
+                                        ? "border-black/[0.12] bg-black/[0.035]"
+                                        : "border-black/[0.07] bg-white hover:border-black/[0.12] hover:bg-black/[0.025]"
+                                    }`}
                             >
+
                                 {/* Avatar */}
-                                <div
-                                    style={{
-                                        width: "34px",
-                                        height: "34px",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        borderRadius: "50%",
-                                        backgroundColor: "var(--primary)",
-                                        color: "#fff",
-                                        fontSize: "0.85rem",
-                                        fontWeight: 700,
-                                        flexShrink: 0,
-                                    }}
-                                >
-                                    {user?.name?.charAt(0).toUpperCase()}
+
+                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#111111] text-xs font-semibold uppercase text-white">
+                                    {user?.name
+                                        ?.charAt(0)
+                                        .toUpperCase()}
                                 </div>
 
                                 {/* Name */}
-                                <span
-                                    style={{
-                                        maxWidth: "120px",
-                                        overflow: "hidden",
-                                        textOverflow: "ellipsis",
-                                        whiteSpace: "nowrap",
-                                        fontSize: "0.9rem",
-                                        fontWeight: 500,
-                                    }}
-                                >
+
+                                <span className="max-w-[120px] truncate text-sm font-medium text-black/70">
                                     {user?.name}
                                 </span>
 
                                 <ChevronDown
-                                    size={16}
-                                    style={{
-                                        color: "var(--text-light)",
-                                        transition: "transform 0.2s ease",
-                                        transform: profileOpen
-                                            ? "rotate(180deg)"
-                                            : "rotate(0deg)",
-                                    }}
+                                    size={15}
+                                    strokeWidth={1.8}
+                                    className={`text-black/35 transition-transform duration-200 ${profileOpen
+                                            ? "rotate-180"
+                                            : ""
+                                        }`}
                                 />
                             </button>
 
-                            {/* Dropdown */}
+                            {/* ================================= */}
+                            {/* PROFILE DROPDOWN */}
+                            {/* ================================= */}
+
                             {profileOpen && (
-                                <div
-                                    style={{
-                                        position: "absolute",
-                                        top: "calc(100% + 10px)",
-                                        right: 0,
-                                        width: "260px",
-                                        padding: "0.5rem",
-                                        borderRadius: "14px",
-                                        border: "1px solid var(--border)",
-                                        backgroundColor: "var(--surface)",
-                                        boxShadow:
-                                            "0 12px 35px rgba(0, 0, 0, 0.12)",
-                                        zIndex: 1000,
-                                    }}
-                                >
-                                    {/* User Information */}
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "0.75rem",
-                                            padding: "0.75rem",
-                                            marginBottom: "0.35rem",
-                                            borderRadius: "10px",
-                                            backgroundColor:
-                                                "var(--background)",
-                                        }}
-                                    >
-                                        <div
-                                            style={{
-                                                width: "42px",
-                                                height: "42px",
-                                                display: "flex",
-                                                alignItems: "center",
-                                                justifyContent: "center",
-                                                borderRadius: "50%",
-                                                backgroundColor: "var(--primary)",
-                                                color: "#fff",
-                                                fontSize: "1rem",
-                                                fontWeight: 700,
-                                                flexShrink: 0,
-                                            }}
-                                        >
-                                            {user?.name?.charAt(0).toUpperCase()}
-                                        </div>
+                                <div className="absolute right-0 top-[calc(100%+10px)] w-[270px] overflow-hidden rounded-2xl border border-black/[0.07] bg-white p-1.5 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.25)]">
 
-                                        <div
-                                            style={{
-                                                minWidth: 0,
-                                            }}
-                                        >
-                                            <div
-                                                style={{
-                                                    color: "var(--text)",
-                                                    fontSize: "0.9rem",
-                                                    fontWeight: 600,
-                                                }}
-                                            >
-                                                {user?.name}
+                                    {/* User info */}
+
+                                    <div className="mb-1 rounded-xl bg-black/[0.025] p-3">
+
+                                        <div className="flex items-center gap-3">
+
+                                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#111111] text-sm font-semibold uppercase text-white">
+                                                {user?.name
+                                                    ?.charAt(0)
+                                                    .toUpperCase()}
                                             </div>
 
-                                            <div
-                                                style={{
-                                                    marginTop: "2px",
-                                                    color: "var(--text-light)",
-                                                    fontSize: "0.75rem",
-                                                    overflow: "hidden",
-                                                    textOverflow: "ellipsis",
-                                                    whiteSpace: "nowrap",
-                                                }}
-                                            >
-                                                {user?.email}
+                                            <div className="min-w-0">
+
+                                                <p className="truncate text-sm font-semibold text-black/80">
+                                                    {user?.name}
+                                                </p>
+
+                                                <p className="mt-0.5 truncate text-xs text-black/35">
+                                                    {user?.email}
+                                                </p>
+
                                             </div>
+
                                         </div>
+
                                     </div>
 
-                                    {/* Navigation */}
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            gap: "2px",
-                                        }}
-                                    >
+                                    {/* Menu */}
+
+                                    <div className="space-y-0.5">
+
                                         <Link
                                             to="/gallery"
                                             onClick={() =>
-                                                setProfileOpen(false)
+                                                setProfileOpen(
+                                                    false
+                                                )
                                             }
-                                            className="profile-link"
+                                            className="flex h-10 items-center gap-3 rounded-xl px-3 text-sm text-black/55 no-underline transition hover:bg-black/[0.04] hover:text-black"
                                         >
-                                            <ImageIcon size={17} />
-                                            <span>Gallery</span>
+                                            <ImageIcon
+                                                size={16}
+                                                strokeWidth={1.7}
+                                            />
+
+                                            <span>
+                                                Gallery
+                                            </span>
                                         </Link>
 
                                         <Link
                                             to="/profile"
                                             onClick={() =>
-                                                setProfileOpen(false)
+                                                setProfileOpen(
+                                                    false
+                                                )
                                             }
-                                            className="profile-link"
+                                            className="flex h-10 items-center gap-3 rounded-xl px-3 text-sm text-black/55 no-underline transition hover:bg-black/[0.04] hover:text-black"
                                         >
-                                            <User size={17} />
-                                            <span>Profile</span>
+                                            <User
+                                                size={16}
+                                                strokeWidth={1.7}
+                                            />
+
+                                            <span>
+                                                Profile
+                                            </span>
                                         </Link>
 
                                         <Link
                                             to="/settings"
                                             onClick={() =>
-                                                setProfileOpen(false)
+                                                setProfileOpen(
+                                                    false
+                                                )
                                             }
-                                            className="profile-link"
+                                            className="flex h-10 items-center gap-3 rounded-xl px-3 text-sm text-black/55 no-underline transition hover:bg-black/[0.04] hover:text-black"
                                         >
-                                            <Settings size={17} />
-                                            <span>Settings</span>
+                                            <Settings
+                                                size={16}
+                                                strokeWidth={1.7}
+                                            />
+
+                                            <span>
+                                                Settings
+                                            </span>
                                         </Link>
+
                                     </div>
 
                                     {/* Divider */}
-                                    <div
-                                        style={{
-                                            height: "1px",
-                                            backgroundColor: "var(--border)",
-                                            margin: "0.45rem 0",
-                                        }}
-                                    />
+
+                                    <div className="my-1.5 h-px bg-black/[0.06]" />
 
                                     {/* Logout */}
+
                                     <button
                                         type="button"
                                         onClick={handleLogout}
-                                        className="logout-button"
-                                        style={{
-                                            width: "100%",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "0.65rem",
-                                            padding: "0.65rem 0.75rem",
-                                            border: "none",
-                                            borderRadius: "9px",
-                                            background: "transparent",
-                                            color: "var(--text-light)",
-                                            fontSize: "0.875rem",
-                                            cursor: "pointer",
-                                            textAlign: "left",
-                                            transition: "all 0.2s ease",
-                                        }}
+                                        className="flex h-10 w-full items-center gap-3 rounded-xl px-3 text-left text-sm text-black/45 transition hover:bg-red-500/[0.06] hover:text-red-600"
                                     >
-                                        <LogOut size={17} />
-                                        <span>Logout</span>
+                                        <LogOut
+                                            size={16}
+                                            strokeWidth={1.7}
+                                        />
+
+                                        <span>
+                                            Logout
+                                        </span>
                                     </button>
+
                                 </div>
                             )}
                         </div>
                     ) : (
-                        <div
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "0.5rem",
-                            }}
-                        >
+                        /* ================================= */
+                        /* LOGGED OUT */
+                        /* ================================= */
+
+                        <div className="flex items-center gap-2">
+
                             <Link
                                 to="/login"
-                                className="btn"
-                                style={{ textDecoration: "none" }}
+                                className="flex h-10 items-center rounded-xl px-4 text-sm font-medium text-black/55 no-underline transition hover:bg-black/[0.04] hover:text-black"
                             >
                                 Login
                             </Link>
 
                             <Link
                                 to="/signup"
-                                className="btn"
-                                style={{ textDecoration: "none" }}
+                                className="flex h-10 items-center rounded-xl bg-[#111111] px-4 text-sm font-medium text-white no-underline shadow-sm transition hover:bg-black hover:shadow-md"
                             >
                                 Sign Up
                             </Link>
+
                         </div>
                     )}
+
                 </div>
 
-                {/* Mobile Toggle Button */}
-                <div className="mobile-toggle">
-                    <button
-                        type="button"
-                        onClick={() => setMobileOpen((prev) => !prev)}
-                        className="icon-btn"
-                    >
-                        {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-                    </button>
-                </div>
+                {/* ===================================== */}
+                {/* MOBILE MENU BUTTON */}
+                {/* ===================================== */}
+
+                <button
+                    type="button"
+                    onClick={() =>
+                        setMobileOpen(
+                            (prev) => !prev
+                        )
+                    }
+                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-black/[0.07] bg-white text-black/60 transition hover:bg-black/[0.03] hover:text-black sm:hidden"
+                    aria-label="Toggle menu"
+                >
+                    {mobileOpen ? (
+                        <X
+                            size={19}
+                            strokeWidth={1.8}
+                        />
+                    ) : (
+                        <Menu
+                            size={19}
+                            strokeWidth={1.8}
+                        />
+                    )}
+                </button>
+
             </div>
 
-            {/* Mobile Drawer */}
-            {mobileOpen && (
-                <div
-                    style={{
-                        borderTop: "1px solid var(--border)",
-                        backgroundColor: "var(--background)",
-                        padding: "1.25rem 1.5rem",
-                    }}
-                >
-                    <div
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "0.75rem",
-                            paddingBottom: "1rem",
-                            borderBottom: "1px solid var(--border)",
-                        }}
-                    >
-                        <div
-                            style={{
-                                display: "flex",
-                                height: "40px",
-                                width: "40px",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                borderRadius: "50%",
-                                backgroundColor: "var(--primary)",
-                                color: "#ffffff",
-                                fontSize: "0.875rem",
-                                fontWeight: 700,
-                            }}
-                        >
-                            {user?.name[0]}
-                        </div>
-                        <div>
-                            <h3
-                                style={{
-                                    margin: 0,
-                                    fontSize: "0.9rem",
-                                    fontWeight: 600,
-                                    color: "var(--text)",
-                                }}
-                            >
-                                {user?.name}
-                            </h3>
-                            <p className="caption" style={{ margin: "0.2rem 0 0 0" }}>
-                                {user?.email}
-                            </p>
-                        </div>
-                    </div>
+            {/* ========================================= */}
+            {/* MOBILE DRAWER */}
+            {/* ========================================= */}
 
-                    <nav style={{ marginTop: "0.75rem", display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+            {mobileOpen && (
+                <div className="border-t border-black/[0.06] bg-white px-5 py-4 sm:hidden">
+
+                    {/* Logged in user */}
+
+                    {isLoggedIn && (
+                        <div className="mb-3 rounded-2xl bg-black/[0.025] p-3">
+
+                            <div className="flex items-center gap-3">
+
+                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#111111] text-sm font-semibold uppercase text-white">
+                                    {user?.name?.[0]}
+                                </div>
+
+                                <div className="min-w-0">
+
+                                    <p className="truncate text-sm font-semibold text-black/80">
+                                        {user?.name}
+                                    </p>
+
+                                    <p className="mt-0.5 truncate text-xs text-black/35">
+                                        {user?.email}
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    )}
+
+                    {/* Mobile navigation */}
+
+                    <nav className="space-y-1">
+
                         <Link
                             to="/gallery"
-                            onClick={() => setMobileOpen(false)}
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "0.75rem",
-                                padding: "0.75rem",
-                                borderRadius: "10px",
-                                color: "var(--text)",
-                                textDecoration: "none",
-                                fontSize: "0.9rem",
-                            }}
+                            onClick={() =>
+                                setMobileOpen(false)
+                            }
+                            className="flex h-11 items-center gap-3 rounded-xl px-3 text-sm font-medium text-black/60 no-underline transition hover:bg-black/[0.04] hover:text-black"
                         >
-                            <ImageIcon size={18} className="icon" />
+                            <ImageIcon
+                                size={18}
+                                strokeWidth={1.7}
+                            />
+
                             Gallery
                         </Link>
-                        <Link
-                            to="/profile"
-                            onClick={() => setMobileOpen(false)}
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "0.75rem",
-                                padding: "0.75rem",
-                                borderRadius: "10px",
-                                color: "var(--text)",
-                                textDecoration: "none",
-                                fontSize: "0.9rem",
-                            }}
-                        >
-                            <User size={18} className="icon" />
-                            Profile
-                        </Link>
-                        <Link
-                            to="/settings"
-                            onClick={() => setMobileOpen(false)}
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "0.75rem",
-                                padding: "0.75rem",
-                                borderRadius: "10px",
-                                color: "var(--text)",
-                                textDecoration: "none",
-                                fontSize: "0.9rem",
-                            }}
-                        >
-                            <Settings size={18} className="icon" />
-                            Settings
-                        </Link>
-                        <button
-                            type="button"
-                            onClick={handleLogout}
-                            style={{
-                                display: "flex",
-                                width: "100%",
-                                alignItems: "center",
-                                gap: "0.75rem",
-                                padding: "0.75rem",
-                                borderRadius: "10px",
-                                color: "var(--danger)",
-                                backgroundColor: "transparent",
-                                border: "none",
-                                cursor: "pointer",
-                                fontSize: "0.9rem",
-                                textAlign: "left",
-                            }}
-                        >
-                            <LogOut size={18} />
-                            Logout
-                        </button>
+
+                        {isLoggedIn && (
+                            <>
+                                <Link
+                                    to="/profile"
+                                    onClick={() =>
+                                        setMobileOpen(false)
+                                    }
+                                    className="flex h-11 items-center gap-3 rounded-xl px-3 text-sm font-medium text-black/60 no-underline transition hover:bg-black/[0.04] hover:text-black"
+                                >
+                                    <User
+                                        size={18}
+                                        strokeWidth={1.7}
+                                    />
+
+                                    Profile
+                                </Link>
+
+                                <Link
+                                    to="/settings"
+                                    onClick={() =>
+                                        setMobileOpen(false)
+                                    }
+                                    className="flex h-11 items-center gap-3 rounded-xl px-3 text-sm font-medium text-black/60 no-underline transition hover:bg-black/[0.04] hover:text-black"
+                                >
+                                    <Settings
+                                        size={18}
+                                        strokeWidth={1.7}
+                                    />
+
+                                    Settings
+                                </Link>
+
+                                <div className="my-2 h-px bg-black/[0.06]" />
+
+                                <button
+                                    type="button"
+                                    onClick={handleLogout}
+                                    className="flex h-11 w-full items-center gap-3 rounded-xl px-3 text-left text-sm font-medium text-red-500 transition hover:bg-red-500/[0.05]"
+                                >
+                                    <LogOut
+                                        size={18}
+                                        strokeWidth={1.7}
+                                    />
+
+                                    Logout
+                                </button>
+                            </>
+                        )}
+
+                        {!isLoggedIn && (
+                            <div className="mt-3 grid grid-cols-2 gap-2">
+
+                                <Link
+                                    to="/login"
+                                    onClick={() =>
+                                        setMobileOpen(false)
+                                    }
+                                    className="flex h-11 items-center justify-center rounded-xl border border-black/[0.07] text-sm font-medium text-black/60 no-underline transition hover:bg-black/[0.03] hover:text-black"
+                                >
+                                    Login
+                                </Link>
+
+                                <Link
+                                    to="/signup"
+                                    onClick={() =>
+                                        setMobileOpen(false)
+                                    }
+                                    className="flex h-11 items-center justify-center rounded-xl bg-[#111111] text-sm font-medium text-white no-underline transition hover:bg-black"
+                                >
+                                    Sign Up
+                                </Link>
+
+                            </div>
+                        )}
+
                     </nav>
+
                 </div>
             )}
 
-            {/* Helper CSS Rule for Mobile Toggle Visibility */}
-            <style>{`
-        @media (min-width: 640px) {
-          .mobile-toggle { display: none !important; }
-          .desktop-menu { display: flex !important; }
-        }
-        @media (max-width: 639px) {
-          .mobile-toggle { display: block !important; }
-          .desktop-menu { display: none !important; }
-        }
-      `}</style>
         </header>
     );
 }
